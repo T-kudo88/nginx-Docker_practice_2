@@ -1,0 +1,20 @@
+version: "3.8"
+services:
+  nginx-secure:
+    image: nginx
+    container_name: nginx-secure
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf # 既存のnginx設定ファイル
+      - ./ssl/cert.pem:/etc/nginx/ssl/cert.pem # SSL証明書
+      - ./ssl/cert.key:/etc/nginx/ssl/cert.key # SSL証明書の鍵
+      - ./.htpasswd:/etc/nginx/.htpasswd # .htpasswd ファイルのマウント（修正）
+      - ./cert.pem:/etc/nginx/cert.pem:ro
+      - ./cert.key:/etc/nginx/cert.key:ro
+      - ./html:/usr/share/nginx/html # ウェブコンテンツ
+    environment:
+      - NGINX_HOST=localhost
+      - NGINX_PORT=443
+    restart: always
